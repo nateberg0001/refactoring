@@ -1,9 +1,9 @@
 04a690a (HEAD -> main) Commit Task 2.4
-0007d2a Commit Task 2.3 Task 1.1
-7e01d79 Commit Task 2.2 Task 1.1
-7fb357e Commit Task 2.1 Task 1.1
-f98e700 Commit Task 1.2 Task 1.1
-fsdj030 Commit Task 1.1 h Task 1.1 Task 1.1
+0007d2a Commit Task 2.3
+7e01d79 Commit Task 2.2
+7fb357e Commit Task 2.1
+f98e700 Commit Task 1.2
+fsdj030 Commit Task 1.1
 2b4f164 (origin/main, origin/HEAD) fixed tests for the not-for-credit tasks; parameter ordering and ensuring consistent line endings.
 ff5004e adding shortcut keys for Inline Variable (Re: Piazza question)
 b545fe2 clarifying extracted method names in README.md
