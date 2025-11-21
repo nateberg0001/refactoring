@@ -26,24 +26,31 @@ public class StatementPrinter {
         int volumeCredits = 0;
         StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
 
-        NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
-
         for (Performance performance : invoice.getPerformances()) {
             Play play = plays.get(performance.playID);
 
             int rslt = 0;
             rslt = getAmount(performance);
 
-            volumeCredits = getVolumeCredits(performance, play);
+            volumeCredits += getVolumeCredits(performance, play);
 
             // print line for this order
             result.append(String.format("  %s: %s (%s seats)%n", play.name,
-                    frmt.format(rslt / 100), performance.audience));
+                    usd(rslt), performance.audience));
             totalAmount += rslt;
         }
-        result.append(String.format("Amount owed is %s%n", frmt.format(totalAmount / 100)));
+        result.append(String.format("Amount owed is %s%n",
+                usd(totalAmount)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
         return result.toString();
+    }
+
+    private static String usd(int rslt) {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(rslt / 100);
+    }
+
+    private Play getPlay(Performance performance){
+        return this.plays.get(performance.playID);
     }
 
     private static int getVolumeCredits(Performance performance, Play play) {
@@ -56,9 +63,9 @@ public class StatementPrinter {
         return result;
     }
 
-    private static int getAmount(Performance p) {
+    private int getAmount(Performance p) {
         int thisAmount;
-        switch (p.playID) {
+        switch (this.getPlay(p).type) {
             case "tragedy":
                 thisAmount = 40000;
                 if (p.audience > Constants.TRAGEDY_AUDIENCE_THRESHOLD) {
