@@ -13,11 +13,11 @@ public class Performance {
         this.audience = audience;
     }
 
-    public String getPlayID(){
+    public String getPlayID() {
         return this.playID;
     }
 
-    public int getAudience(){
+    public int getAudience() {
         return this.audience;
     }
 }

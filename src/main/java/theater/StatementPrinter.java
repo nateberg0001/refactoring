@@ -32,8 +32,8 @@ public class StatementPrinter {
     public String statement() {
         int totalAmount = 0;
         int volumeCredits = 0;
-        final StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer() +
-                System.lineSeparator());
+        final StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer()
+                + System.lineSeparator());
         volumeCredits = getTotalVolumeCredits();
         totalAmount = getTotalAmount(result);
         result.append(String.format("Amount owed is %s%n",
