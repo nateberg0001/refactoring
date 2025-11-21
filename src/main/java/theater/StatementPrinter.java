@@ -25,7 +25,7 @@ public class StatementPrinter {
         int totalAmount = 0;
         int volumeCredits = 0;
         StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
-        volumeCredits = getVolumeCredits();
+        volumeCredits = getTotalVolumeCredits();
         totalAmount = getTotalAmount(result);
         result.append(String.format("Amount owed is %s%n",
                 usd(totalAmount)));
@@ -33,7 +33,7 @@ public class StatementPrinter {
         return result.toString();
     }
 
-    private int getVolumeCredits() {
+    private int getTotalVolumeCredits() {
         int rslt = 0;
         for (Performance performance : invoice.getPerformances()) {
             Play play = plays.get(performance.playID);
