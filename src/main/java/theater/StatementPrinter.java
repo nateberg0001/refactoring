@@ -25,24 +25,34 @@ public class StatementPrinter {
         int totalAmount = 0;
         int volumeCredits = 0;
         StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
-
-        for (Performance performance : invoice.getPerformances()) {
-            Play play = plays.get(performance.playID);
-
-            int rslt = 0;
-            rslt = getAmount(performance);
-
-            volumeCredits += getVolumeCredits(performance, play);
-
-            // print line for this order
-            result.append(String.format("  %s: %s (%s seats)%n", play.name,
-                    usd(rslt), performance.audience));
-            totalAmount += rslt;
-        }
+        volumeCredits = getVolumeCredits();
+        totalAmount = getTotalAmount(result);
         result.append(String.format("Amount owed is %s%n",
                 usd(totalAmount)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
         return result.toString();
+    }
+
+    private int getVolumeCredits() {
+        int rslt = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            Play play = plays.get(performance.playID);
+            rslt += getVolumeCredits(performance, play);
+        }
+        return rslt;
+    }
+
+    private int getTotalAmount(StringBuilder result) {
+        int rslt = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            Play play = plays.get(performance.playID);
+            int amount = getAmount(performance);
+            // print line for this order
+            result.append(String.format("  %s: %s (%s seats)%n", play.name,
+                    usd(amount), performance.audience));
+            rslt += amount;
+        }
+        return rslt;
     }
 
     private static String usd(int rslt) {
