@@ -20,7 +20,7 @@ public class StatementPrinter {
         return this.invoice;
     }
 
-    public Map<String, Play> getPlays(){
+    public Map<String, Play> getPlays() {
         return this.plays;
     }
     /**
@@ -28,10 +28,12 @@ public class StatementPrinter {
      * @return the formatted statement
      * @throws RuntimeException if one of the play types is not known
      */
+
     public String statement() {
         int totalAmount = 0;
         int volumeCredits = 0;
-        final StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
+        final StringBuilder result = new StringBuilder("Statement for " + invoice.getCustomer() +
+                System.lineSeparator());
         volumeCredits = getTotalVolumeCredits();
         totalAmount = getTotalAmount(result);
         result.append(String.format("Amount owed is %s%n",
@@ -43,7 +45,7 @@ public class StatementPrinter {
     private int getTotalVolumeCredits() {
         int rslt = 0;
         for (Performance performance : invoice.getPerformances()) {
-            final Play play = plays.get(performance.playID);
+            final Play play = plays.get(performance.getPlayID());
             rslt += getVolumeCredits(performance, play);
         }
         return rslt;
@@ -52,11 +54,11 @@ public class StatementPrinter {
     private int getTotalAmount(StringBuilder result) {
         int rslt = 0;
         for (Performance performance : invoice.getPerformances()) {
-            final Play play = plays.get(performance.playID);
+            final Play play = plays.get(performance.getPlayID());
             final int amount = getAmount(performance);
             // print line for this order
             result.append(String.format("  %s: %s (%s seats)%n", play.getName(),
-                    usd(amount), performance.audience));
+                    usd(amount), performance.getAudience()));
             rslt += amount;
         }
         return rslt;
@@ -68,16 +70,17 @@ public class StatementPrinter {
     }
 
     private Play getPlay(Performance performance) {
-        return this.plays.get(performance.playID);
+        return this.plays.get(performance.getPlayID());
     }
 
     private static int getVolumeCredits(Performance performance, Play play) {
         int result = 0;
         // add volume credits
-        result += Math.max(performance.audience - Constants.BASE_VOLUME_CREDIT_THRESHOLD, 0);
+        result += Math.max(performance.getAudience() - Constants.BASE_VOLUME_CREDIT_THRESHOLD, 0);
         // add extra credit for every five comedy attendees
-        if ("comedy".equals(play.getType())) {result += performance.audience
-                / Constants.COMEDY_EXTRA_VOLUME_FACTOR; }
+        if ("comedy".equals(play.getType())) {
+            result += performance.getAudience() / Constants.COMEDY_EXTRA_VOLUME_FACTOR;
+        }
         return result;
     }
 
@@ -89,21 +92,22 @@ public class StatementPrinter {
                 final int thing1 = 1000;
                 final int thing2 = 30;
                 thisAmount = thing;
-                if (performance.audience > Constants.TRAGEDY_AUDIENCE_THRESHOLD) {
-                    thisAmount += thing1 * (performance.audience - thing2);
+                if (performance.getAudience() > Constants.TRAGEDY_AUDIENCE_THRESHOLD) {
+                    thisAmount += thing1 * (performance.getAudience() - thing2);
                 }
                 break;
             case "comedy":
                 thisAmount = Constants.COMEDY_BASE_AMOUNT;
-                if (performance.audience > Constants.COMEDY_AUDIENCE_THRESHOLD) {
+                if (performance.getAudience() > Constants.COMEDY_AUDIENCE_THRESHOLD) {
                     thisAmount += Constants.COMEDY_OVER_BASE_CAPACITY_AMOUNT
                             + (Constants.COMEDY_OVER_BASE_CAPACITY_PER_PERSON
-                            * (performance.audience - Constants.COMEDY_AUDIENCE_THRESHOLD));
+                            * (performance.getAudience() - Constants.COMEDY_AUDIENCE_THRESHOLD));
                 }
-                thisAmount += Constants.COMEDY_AMOUNT_PER_AUDIENCE * performance.audience;
+                thisAmount += Constants.COMEDY_AMOUNT_PER_AUDIENCE * performance.getAudience();
                 break;
             default:
-                throw new RuntimeException(String.format("unknown type: %s", performance.playID));
+                throw new RuntimeException(String.format("unknown type: %s",
+                        performance.getPlayID()));
         }
         return thisAmount;
     }
